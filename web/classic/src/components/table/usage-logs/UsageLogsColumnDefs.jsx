@@ -461,16 +461,19 @@ function getUsageLogDetailSummary(record, text, billingDisplayMode, t) {
     };
   }
 
+  const completionTokens = toTokenNumber(record?.completion_tokens);
+  const outputTokenSegment = completionTokens > 0
+    ? { text: `${t('输出Token')}：${formatTokenCount(completionTokens)}`, tone: 'primary' }
+    : null;
   const summaryOpts = { ...other, displayMode: billingDisplayMode, outputMode: 'segments' };
-
-  if (other?.billing_mode === 'tiered_expr') {
-    return { segments: renderTieredModelPriceSimple(summaryOpts) };
-  }
+  const priceSegments = other?.billing_mode === 'tiered_expr'
+    ? renderTieredModelPriceSimple(summaryOpts)
+    : other?.claude
+      ? renderModelPriceSimple({ ...summaryOpts, provider: 'claude' })
+      : renderModelPriceSimple({ ...summaryOpts, provider: 'openai' });
 
   return {
-    segments: other?.claude
-      ? renderModelPriceSimple({ ...summaryOpts, provider: 'claude' })
-      : renderModelPriceSimple({ ...summaryOpts, provider: 'openai' }),
+    segments: [outputTokenSegment, ...priceSegments].filter(Boolean),
   };
 }
 
@@ -787,17 +790,19 @@ export const getLogsColumns = ({
     },
     {
       key: COLUMN_KEYS.COMPLETION,
-      title: t('输出'),
+      title: t('输出Token'),
       dataIndex: 'completion_tokens',
       render: (text, record, index) => {
-        return parseInt(text) > 0 &&
+        return toTokenNumber(text) > 0 &&
           (record.type === 0 ||
             record.type === 2 ||
             record.type === 5 ||
             record.type === 6) ? (
-          <>{<span> {text} </span>}</>
+          <Tag color='green' shape='circle'>
+            {formatTokenCount(text)}
+          </Tag>
         ) : (
-          <></>
+          <Typography.Text type='tertiary'>-</Typography.Text>
         );
       },
     },

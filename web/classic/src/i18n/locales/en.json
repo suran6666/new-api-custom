@@ -3828,5 +3828,9 @@
     "运营和收费行为产生的法律责任": "operation and charging behavior",
     "，": ", ",
     "、": ", "
-  }
+  },
+  "统一的大模型接口网关": "Unified LLM API gateway",
+  "供应商": "Providers",
+  "统一接入": "Unified access",
+  "输出Token": "Output tokens"
 }
