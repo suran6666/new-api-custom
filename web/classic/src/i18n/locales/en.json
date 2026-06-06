@@ -3832,5 +3832,6 @@
   "统一的大模型接口网关": "Unified LLM API gateway",
   "供应商": "Providers",
   "统一接入": "Unified access",
-  "输出Token": "Output tokens"
+  "输出Token": "Output tokens",
+  "每秒输出": "Output per second"
 }

@@ -344,6 +344,22 @@ function formatTokenCount(value) {
   return toTokenNumber(value).toLocaleString();
 }
 
+function getOutputTokensPerSecond(record) {
+  const completionTokens = toTokenNumber(record?.completion_tokens);
+  const useTime = Number(record?.use_time);
+  if (!Number.isFinite(useTime) || useTime <= 0 || completionTokens <= 0) {
+    return 0;
+  }
+  return completionTokens / useTime;
+}
+
+function formatTokenRate(value) {
+  if (!Number.isFinite(value) || value <= 0) {
+    return '-';
+  }
+  return value >= 100 ? value.toFixed(0) : value.toFixed(1);
+}
+
 function getPromptCacheSummary(other) {
   if (!other || typeof other !== 'object') {
     return null;
@@ -462,8 +478,12 @@ function getUsageLogDetailSummary(record, text, billingDisplayMode, t) {
   }
 
   const completionTokens = toTokenNumber(record?.completion_tokens);
+  const outputTokenRate = getOutputTokensPerSecond(record);
   const outputTokenSegment = completionTokens > 0
-    ? { text: `${t('输出Token')}：${formatTokenCount(completionTokens)}`, tone: 'primary' }
+    ? {
+        text: `${t('输出Token')}：${formatTokenCount(completionTokens)} · ${formatTokenRate(outputTokenRate)} token/s`,
+        tone: 'primary',
+      }
     : null;
   const summaryOpts = { ...other, displayMode: billingDisplayMode, outputMode: 'segments' };
   const priceSegments = other?.billing_mode === 'tiered_expr'
@@ -793,14 +813,30 @@ export const getLogsColumns = ({
       title: t('输出Token'),
       dataIndex: 'completion_tokens',
       render: (text, record, index) => {
+        const outputTokenRate = getOutputTokensPerSecond(record);
         return toTokenNumber(text) > 0 &&
           (record.type === 0 ||
             record.type === 2 ||
             record.type === 5 ||
             record.type === 6) ? (
-          <Tag color='green' shape='circle'>
-            {formatTokenCount(text)}
-          </Tag>
+          <div
+            style={{
+              display: 'inline-flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+              lineHeight: 1.2,
+            }}
+          >
+            <span>{formatTokenCount(text)}</span>
+            <Typography.Text
+              type='tertiary'
+              size='small'
+              style={{ whiteSpace: 'nowrap', fontSize: 11 }}
+            >
+              {formatTokenRate(outputTokenRate)} token/s
+            </Typography.Text>
+          </div>
         ) : (
           <Typography.Text type='tertiary'>-</Typography.Text>
         );
