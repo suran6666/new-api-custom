@@ -33,35 +33,12 @@ import { useActualTheme } from '../../context/Theme';
 import { marked } from 'marked';
 import { useTranslation } from 'react-i18next';
 import {
-  IconGithubLogo,
   IconPlay,
-  IconFile,
   IconCopy,
 } from '@douyinfe/semi-icons';
 import { Link } from 'react-router-dom';
 import NoticeModal from '../../components/layout/NoticeModal';
-import {
-  Moonshot,
-  OpenAI,
-  XAI,
-  Zhipu,
-  Volcengine,
-  Cohere,
-  Claude,
-  Gemini,
-  Suno,
-  Minimax,
-  Wenxin,
-  Spark,
-  Qingyan,
-  DeepSeek,
-  Qwen,
-  Midjourney,
-  Grok,
-  AzureAI,
-  Hunyuan,
-  Xinference,
-} from '@lobehub/icons';
+import { Claude, OpenAI } from '@lobehub/icons';
 
 const { Text } = Typography;
 
@@ -73,13 +50,42 @@ const Home = () => {
   const [homePageContent, setHomePageContent] = useState('');
   const [noticeVisible, setNoticeVisible] = useState(false);
   const isMobile = useIsMobile();
-  const isDemoSiteMode = statusState?.status?.demo_site_enabled || false;
-  const docsLink = statusState?.status?.docs_link || '';
   const serverAddress =
     statusState?.status?.server_address || `${window.location.origin}`;
   const endpointItems = API_ENDPOINTS.map((e) => ({ value: e }));
   const [endpointIndex, setEndpointIndex] = useState(0);
   const isChinese = i18n.language.startsWith('zh');
+  const valueHighlights = [
+    { value: '0.1', label: t('低至 0.1 兑换 $1 额度') },
+    { value: 'Stable', label: t('高速稳定低延迟') },
+    { value: 'Pure', label: t('纯血模型直连体验') },
+  ];
+  const toolkitItems = [
+    {
+      name: 'CC Switch',
+      mark: 'CC',
+      tag: t('Claude Code 路由切换'),
+      description: t('一键切换 Claude Code 供应商与 API 配置，适合多通道管理。'),
+      href: 'https://cc-switch.cc/download',
+      accent: 'teal',
+    },
+    {
+      name: 'Codex++',
+      mark: 'C++',
+      tag: t('Codex 增强工具'),
+      description: t('获取 Codex++ 最新版本，扩展本地 Codex 工作流。'),
+      href: 'https://github.com/BigPizzaV3/CodexPlusPlus/releases',
+      accent: 'violet',
+    },
+    {
+      name: 'Codex App',
+      mark: 'CA',
+      tag: t('OpenAI 官方客户端'),
+      description: t('前往 OpenAI 官方页面下载 Codex App，连接你的开发环境。'),
+      href: 'https://openai.com/codex/',
+      accent: 'blue',
+    },
+  ];
 
   const displayHomePageContent = async () => {
     setHomePageContent(localStorage.getItem('home_page_content') || '');
@@ -163,12 +169,20 @@ const Home = () => {
               <section className='classic-home-copy'>
                 <div className='classic-home-eyebrow'>
                   <span className='classic-home-eyebrow-dot' />
-                  {t('统一的大模型接口网关')}
+                  {t('高性价比纯血模型通道')}
                 </div>
                 <h1 className='classic-home-title'>openapi</h1>
                 <p className='classic-home-subtitle'>
-                  {t('多模型统一接入，只需将基址替换为：')}
+                  {t('专注 GPT 与 Claude Code 工作流，一个 Base URL 即可接入。低成本、高稳定、响应快，适合长期高频使用。')}
                 </p>
+                <div className='classic-home-highlights'>
+                  {valueHighlights.map((item) => (
+                    <div className='classic-home-highlight' key={item.label}>
+                      <strong>{item.value}</strong>
+                      <span>{item.label}</span>
+                    </div>
+                  ))}
+                </div>
                 <div className='classic-home-endpoint-shell'>
                   <div className='classic-home-endpoint-label'>Base URL</div>
                   <Input
@@ -212,45 +226,19 @@ const Home = () => {
                       {t('获取密钥')}
                     </Button>
                   </Link>
-                  {isDemoSiteMode && statusState?.status?.version ? (
-                    <Button
-                      size={isMobile ? 'default' : 'large'}
-                      className='classic-home-secondary-action'
-                      icon={<IconGithubLogo />}
-                      onClick={() =>
-                        window.open(
-                          'https://github.com/QuantumNous/new-api',
-                          '_blank',
-                        )
-                      }
-                    >
-                      {statusState.status.version}
-                    </Button>
-                  ) : (
-                    docsLink && (
-                      <Button
-                        size={isMobile ? 'default' : 'large'}
-                        className='classic-home-secondary-action'
-                        icon={<IconFile />}
-                        onClick={() => window.open(docsLink, '_blank')}
-                      >
-                        {t('文档')}
-                      </Button>
-                    )
-                  )}
                 </div>
                 <div className='classic-home-metrics'>
                   <div>
-                    <strong>30+</strong>
-                    <span>{t('供应商')}</span>
+                    <strong>0.1</strong>
+                    <span>{t('低价额度')}</span>
                   </div>
                   <div>
                     <strong>1</strong>
                     <span>Base URL</span>
                   </div>
                   <div>
-                    <strong>API</strong>
-                    <span>{t('统一接入')}</span>
+                    <strong>GPT</strong>
+                    <span>Claude Code</span>
                   </div>
                 </div>
               </section>
@@ -272,47 +260,66 @@ const Home = () => {
                   </div>
                   <div className='classic-home-terminal-line'>
                     <span>POST</span>
-                    <code>/v1/audio/transcriptions</code>
+                    <code>/v1/messages</code>
                   </div>
                   <div className='classic-home-route-map'>
+                    <div>GPT</div>
+                    <span />
                     <div>openapi</div>
                     <span />
-                    <div>模型路由</div>
-                    <span />
-                    <div>统一计费</div>
+                    <div>Claude Code</div>
                   </div>
                 </div>
               </section>
             </div>
 
             <div className='classic-home-provider-strip'>
-              <Text className='classic-home-provider-title'>
-                {t('支持众多的大模型供应商')}
-              </Text>
-              <div className='classic-home-provider-grid'>
-                <Moonshot size={34} />
-                <OpenAI size={34} />
-                <XAI size={34} />
-                <Zhipu.Color size={34} />
-                <Volcengine.Color size={34} />
-                <Cohere.Color size={34} />
-                <Claude.Color size={34} />
-                <Gemini.Color size={34} />
-                <Suno size={34} />
-                <Minimax.Color size={34} />
-                <Wenxin.Color size={34} />
-                <Spark.Color size={34} />
-                <Qingyan.Color size={34} />
-                <DeepSeek.Color size={34} />
-                <Qwen.Color size={34} />
-                <Midjourney size={34} />
-                <Grok size={34} />
-                <AzureAI.Color size={34} />
-                <Hunyuan.Color size={34} />
-                <Xinference.Color size={34} />
-                <Typography.Text className='classic-home-provider-more'>
-                  30+
-                </Typography.Text>
+              <div className='classic-home-model-card'>
+                <Text className='classic-home-provider-title'>
+                  {t('当前支持')}
+                </Text>
+                <div className='classic-home-provider-grid'>
+                  <div className='classic-home-model-pill'>
+                    <OpenAI size={28} />
+                    <span>GPT</span>
+                  </div>
+                  <div className='classic-home-model-pill'>
+                    <Claude.Color size={28} />
+                    <span>Claude Code</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className='classic-home-toolkit-card'>
+                <div>
+                  <Text className='classic-home-provider-title'>
+                    {t('工具包')}
+                  </Text>
+                  <h2>{t('常用工具，一键前往官方下载')}</h2>
+                  <p>
+                    {t('下载工具后替换 Base URL 和密钥，即可接入 openapi。')}
+                  </p>
+                </div>
+                <div className='classic-home-toolkit-grid'>
+                  {toolkitItems.map((tool) => (
+                    <a
+                      key={tool.name}
+                      href={tool.href}
+                      target='_blank'
+                      rel='noreferrer'
+                      className={`classic-home-toolkit-item classic-home-toolkit-${tool.accent}`}
+                    >
+                      <div className='classic-home-toolkit-mark'>
+                        {tool.mark}
+                      </div>
+                      <div>
+                        <strong>{tool.name}</strong>
+                        <span>{tool.tag}</span>
+                        <p>{tool.description}</p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
