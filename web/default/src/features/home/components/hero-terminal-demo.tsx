@@ -72,10 +72,10 @@ const ACCENT_CLASSES: Record<
 const API_DEMOS: ApiDemoConfig[] = [
   {
     id: 'gpt-chat',
-    label: 'Chat',
+    label: 'GPT Chat',
     method: 'POST',
     endpoint: '/v1/chat/completions',
-    headers: ['"Authorization: Bearer sk-••••"'],
+    headers: ['"Authorization: Bearer YOUR_KEY"'],
     request: [
       '"model": "your-model",',
       '"messages": [',
@@ -95,10 +95,10 @@ const API_DEMOS: ApiDemoConfig[] = [
   },
   {
     id: 'responses',
-    label: 'Responses',
+    label: 'GPT Responses',
     method: 'POST',
     endpoint: '/v1/responses',
-    headers: ['"Authorization: Bearer sk-••••"'],
+    headers: ['"Authorization: Bearer YOUR_KEY"'],
     request: ['"model": "your-model",', '"input": "..."'],
     response: [
       '{',
@@ -112,11 +112,11 @@ const API_DEMOS: ApiDemoConfig[] = [
     accent: 'amber',
   },
   {
-    id: 'claude',
-    label: 'Claude',
+    id: 'claude-code',
+    label: 'Claude Code',
     method: 'POST',
     endpoint: '/v1/messages',
-    headers: ['"x-api-key: sk-••••"', '"anthropic-version: 2023-06-01"'],
+    headers: ['"Authorization: Bearer YOUR_KEY"', '"client: claude-code"'],
     request: [
       '"model": "your-model",',
       '"max_tokens": 1024,',
@@ -127,36 +127,13 @@ const API_DEMOS: ApiDemoConfig[] = [
     response: [
       '{',
       '  "content": [{ "type": "text", "text": <text> }],',
-      '  "usage": { "input_tokens": <in>, "output_tokens": <out> }',
-      '}',
-    ],
-    responseHighlights: ['<text>', '<in>', '<out>'],
-    tokens: 29,
-    latency: 156,
-    accent: 'blue',
-  },
-  {
-    id: 'gemini',
-    label: 'Gemini',
-    method: 'POST',
-    endpoint: '/v1beta/models/{model}:generateContent',
-    headers: ['"x-goog-api-key: sk-••••"'],
-    request: [
-      '"contents": [',
-      '  { "role": "user",',
-      '    "parts": [{ "text": "..." }] }',
-      ']',
-    ],
-    response: [
-      '{',
-      '  "candidates": [{ "content": { "parts": [{ "text": <text> }] } }],',
-      '  "usageMetadata": { "totalTokenCount": <tokens> }',
+      '  "usage": { "total_tokens": <tokens> }',
       '}',
     ],
     responseHighlights: ['<text>', '<tokens>'],
-    tokens: 25,
-    latency: 93,
-    accent: 'violet',
+    tokens: 29,
+    latency: 156,
+    accent: 'blue',
   },
 ]
 
@@ -449,8 +426,7 @@ function truncateResponse(demo: ApiDemoConfig): string {
   const map: Record<string, string> = {
     'gpt-chat': 'Chat request routed.',
     responses: 'Response workflow ready.',
-    claude: 'Claude message routed.',
-    gemini: 'Gemini request served.',
+    'claude-code': 'Claude Code request routed.',
   }
   return map[demo.id] ?? '...'
 }

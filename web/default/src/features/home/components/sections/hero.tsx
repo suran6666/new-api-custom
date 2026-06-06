@@ -18,9 +18,14 @@ For commercial licensing, please contact support@quantumnous.com
 */
 import { Link } from '@tanstack/react-router'
 import { CherryStudio } from '@lobehub/icons'
-import { ArrowRight, BookOpen } from 'lucide-react'
+import {
+  ArrowRight,
+  CheckCircle2,
+  Gauge,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { useStatus } from '@/hooks/use-status'
 import { Button } from '@/components/ui/button'
 import { HeroTerminalDemo } from '../hero-terminal-demo'
 
@@ -45,37 +50,21 @@ const MoreIcon = () => (
 
 export function Hero(props: HeroProps) {
   const { t } = useTranslation()
-  const { status } = useStatus()
-  const docsUrl =
-    (status?.docs_link as string | undefined) || 'https://docs.newapi.pro'
 
-  const renderDocsButton = () => {
-    const isExternal = docsUrl.startsWith('http')
-    if (isExternal) {
-      return (
-        <Button
-          variant='outline'
-          className='group border-border/50 hover:border-border hover:bg-muted/50 inline-flex h-11 items-center gap-1.5 rounded-lg px-5 text-sm font-medium'
-          render={
-            <a href={docsUrl} target='_blank' rel='noopener noreferrer' />
-          }
-        >
-          <BookOpen className='text-muted-foreground/80 group-hover:text-foreground size-4 transition-colors duration-200' />
-          <span>{t('Docs')}</span>
-        </Button>
-      )
-    }
-    return (
-      <Button
-        variant='outline'
-        className='group border-border/50 hover:border-border hover:bg-muted/50 inline-flex h-11 items-center gap-1.5 rounded-lg px-5 text-sm font-medium'
-        render={<Link to={docsUrl} />}
-      >
-        <BookOpen className='text-muted-foreground/80 group-hover:text-foreground size-4 transition-colors duration-200' />
-        <span>{t('Docs')}</span>
-      </Button>
-    )
-  }
+  const valueHighlights = [
+    {
+      label: t('低至 0.1 兑换 $1 额度'),
+      icon: <Sparkles className='size-3.5 text-amber-400' />,
+    },
+    {
+      label: t('高速稳定低延迟'),
+      icon: <Gauge className='size-3.5 text-emerald-400' />,
+    },
+    {
+      label: t('纯血模型直连体验'),
+      icon: <ShieldCheck className='size-3.5 text-blue-400' />,
+    },
+  ]
 
   return (
     <section className='relative z-10 overflow-hidden px-6 pt-24 pb-16 md:pt-32 md:pb-24 lg:pt-36 lg:pb-28'>
@@ -102,24 +91,24 @@ export function Hero(props: HeroProps) {
         <div className='flex flex-col items-start text-left lg:col-span-6'>
           {/* Top Pill Badge */}
           <div
-            className='landing-animate-fade-up mb-5 inline-flex items-center gap-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 px-3 py-1.5 text-[11px] font-medium text-blue-600 opacity-0 shadow-xs dark:border-blue-400/20 dark:bg-blue-400/5 dark:text-blue-400'
+            className='landing-animate-fade-up mb-5 inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5 text-[11px] font-medium text-emerald-600 opacity-0 shadow-xs dark:border-emerald-400/20 dark:bg-emerald-400/5 dark:text-emerald-400'
             style={{ animationDelay: '0ms' }}
           >
             <span className='relative flex size-1.5'>
-              <span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75' />
-              <span className='relative inline-flex size-1.5 rounded-full bg-blue-500 dark:bg-blue-400' />
+              <span className='absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75' />
+              <span className='relative inline-flex size-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400' />
             </span>
-            <span>{t('AI Application Infrastructure Foundation')}</span>
+            <span>{t('高性价比纯血模型通道')}</span>
           </div>
 
           <h1
             className='landing-animate-fade-up text-[clamp(2.25rem,4.5vw,3.25rem)] leading-[1.15] font-bold tracking-tight'
             style={{ animationDelay: '60ms' }}
           >
-            {t('Unified API Gateway for')}
+            {t('统一接入高品质')}
             <br />
-            <span className='bg-gradient-to-r from-blue-400 via-violet-400 to-purple-500 bg-clip-text text-transparent'>
-              {t('Vast Range of AI Models')}
+            <span className='bg-gradient-to-r from-emerald-400 via-blue-400 to-violet-500 bg-clip-text text-transparent'>
+              {t('AI 模型与开发工具')}
             </span>
           </h1>
           <p
@@ -127,9 +116,24 @@ export function Hero(props: HeroProps) {
             style={{ animationDelay: '120ms' }}
           >
             {t(
-              'Access a vast selection of models via a standard, unified API protocol. Power AI applications, manage digital assets, and connect the Future.'
+              '一个 Base URL 接入 GPT 与 Claude Code 工作流，兼容 Codex、Claude Code、Cherry Studio 等常用工具。低成本、高稳定、响应快，适合长期高频使用。'
             )}
           </p>
+
+          <div
+            className='landing-animate-fade-up mt-5 flex flex-wrap gap-2 opacity-0'
+            style={{ animationDelay: '150ms' }}
+          >
+            {valueHighlights.map((item) => (
+              <div
+                key={item.label}
+                className='border-border/40 bg-background/55 text-foreground/80 inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs shadow-[0_8px_24px_-18px_rgba(0,0,0,0.35)] backdrop-blur-sm'
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </div>
+            ))}
+          </div>
 
           <div
             className='landing-animate-fade-up mt-8 flex flex-wrap items-center gap-3 opacity-0'
@@ -144,7 +148,6 @@ export function Hero(props: HeroProps) {
                   {t('Go to Dashboard')}
                   <ArrowRight className='ml-1.5 size-4 transition-transform duration-200 group-hover:translate-x-0.5' />
                 </Button>
-                {renderDocsButton()}
               </>
             ) : (
               <>
@@ -162,7 +165,6 @@ export function Hero(props: HeroProps) {
                 >
                   {t('View Pricing')}
                 </Button>
-                {renderDocsButton()}
               </>
             )}
           </div>
@@ -174,15 +176,20 @@ export function Hero(props: HeroProps) {
           >
             <div className='mb-4 flex flex-col gap-1'>
               <span className='text-muted-foreground/50 text-[10px] font-bold tracking-[0.15em] uppercase'>
-                {t('Supported Applications')}
+                {t('Ready for production workflows')}
               </span>
               <p className='text-muted-foreground/60 text-xs leading-relaxed'>
                 {t(
-                  'Supports one-click configuration and perfectly adapts to NewAPI multi-protocol configuration.'
+                  '统一密钥、统一额度、统一账单，开发工具和 AI 客户端都能顺滑接入。'
                 )}
               </p>
             </div>
             <div className='flex flex-wrap items-center gap-3'>
+              <div className='border-border/40 bg-muted/15 text-foreground/80 flex items-center gap-2.5 rounded-full border px-4 py-2.5 text-sm font-medium shadow-[0_1px_2.5px_rgba(0,0,0,0.01)] backdrop-blur-xs'>
+                <CheckCircle2 className='size-4 text-emerald-400' />
+                <span>{t('开箱即用')}</span>
+              </div>
+
               {/* Cherry Studio */}
               <a
                 href='https://cherry-ai.com'

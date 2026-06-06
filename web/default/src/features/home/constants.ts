@@ -35,12 +35,8 @@ export const AI_APPLICATIONS = [
 
 // Hero section - AI Models (Right side)
 export const AI_MODELS = [
-  'Qwen.Color',
-  'DeepSeek.Color',
-  'Doubao.Color',
   'OpenAI',
-  'Claude.Color',
-  'Gemini.Color',
+  'Claude',
 ] as const
 
 // Hero section - Gateway Features
@@ -102,7 +98,7 @@ export const DEFAULT_FEATURES = [
   },
   {
     title: 'Developer Friendly',
-    description: 'Compatible API routes for common AI application workflows',
+    description: 'Compatible API routes for GPT and Claude Code workflows',
     iconName: 'Code',
   },
   {
