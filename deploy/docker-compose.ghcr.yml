@@ -1,0 +1,13 @@
+services:
+  new-api:
+    image: ${NEW_API_IMAGE:?Set NEW_API_IMAGE to the custom image tag}
+    container_name: new-api
+    restart: always
+    command: --log-dir /app/logs
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - /opt/new-api/data:/data
+      - /opt/new-api/logs:/app/logs
+    env_file:
+      - /opt/new-api-src/.env.runtime
